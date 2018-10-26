@@ -1,47 +1,46 @@
 <template>
     <dashboard columns="8" rows="8">
-        <chart-tile position="b2:g4" heading="Temperatura" color="blue" :data="chartData1" type="bar"></chart-tile>
-        <chart-tile position="b5:g7" heading="Umidade" color="red" :data="chartData1" type="bar"></chart-tile>
-
-        <level-tile position="h2:h4" color="blue" label="Temperature" :max="30" :value="temperature" unit="°C"></level-tile>
-        <level-tile position="h5:h7" color="red" label="Umidade" :max="30" :value="temperature" unit="%"></level-tile>
-
-        <value-tile position="a2:a3" color="blue" heading="SetPoint">
-            <md-field slot="value">
-                <label>Initial Value</label>
-                <md-input v-model="initial"></md-input>
-            </md-field>
-            <md-field slot="value">
-                <label>Final Value</label>
-                <md-input v-model="initial"></md-input>
-            </md-field>
-        </value-tile>
-        <indicator-tile position="a4:a4" :value="true" color="blue" label="Atuador"></indicator-tile>
-
-        <value-tile position="a5:a6" color="red" heading="SetPoint">
-            <md-field slot="value">
-                <label>Initial Value</label>
-                <md-input v-model="initial"></md-input>
-            </md-field>
-            <md-field slot="value">
-                <label>Final Value</label>
-                <md-input v-model="initial"></md-input>
-            </md-field>
-        </value-tile>
-        <indicator-tile position="a7:a7" :value="true" color="red" label="Atuador"></indicator-tile>
-
-        <value-tile position="a1:a1" color="yellow">
+        <value-tile position="a1:a2" color="yellow">
             <date-time slot="before" format="ddd DD/MM" time-zone="America/Sao_Paulo"></date-time>
             <date-time slot="value" format="HH:mm" time-zone="America/Sao_Paulo"></date-time>
         </value-tile>
         
-        <value-tile position="h1:h1" heading="Curitiba" color="yellow">
+        <value-tile position="h1:h2" heading="Curitiba" color="yellow">
             <weather slot="value" city="Curitiba"></weather>
         </value-tile>
         
-        <value-tile position="b1:g1" color="yellow">
+        <value-tile position="b1:g2" color="yellow">
             <span slot="value">Dashboard</span>
         </value-tile>
+        <chart-tile position="b3:g5" heading="Temperatura" color="blue" :data="chartData1" type="line"></chart-tile>
+        <chart-tile position="b6:g8" heading="Umidade" color="red" :data="chartData2" type="line"></chart-tile>
+
+        <level-tile position="h3:h5" color="blue" label="Temperature" :max="30" :value="temperature" unit="°C"></level-tile>
+        <level-tile position="h6:h8" color="red" label="Umidade" :max="100" :value="umidade" unit="%"></level-tile>
+
+        <value-tile position="a3:a4" color="blue" heading="SetPoint">
+            <md-field slot="value">
+                <label>Initial Value</label>
+                <md-input v-on:keyup.enter="setInitialTemp" v-model="initialTemp"></md-input>
+            </md-field>
+            <md-field slot="value">
+                <label>Final Value</label>
+                <md-input v-on:keyup.enter="setFinalTemp" v-model="finalTemp"></md-input>
+            </md-field>
+        </value-tile>
+        <indicator-tile position="a5:a5" :value="tempAtuador" color="blue" label="Atuador"></indicator-tile>
+
+        <value-tile position="a6:a7" color="red" heading="SetPoint">
+            <md-field slot="value">
+                <label>Initial Value</label>
+                <md-input v-on:keyup.enter="setInitialUmidade" v-model="initialUmidade"></md-input>
+            </md-field>
+            <md-field slot="value">
+                <label>Final Value</label>
+                <md-input v-on:keyup.enter="setFinalUmidade" v-model="finalUmidade"></md-input>
+            </md-field>
+        </value-tile>
+        <indicator-tile position="a8:a8" :value="umidadeAtuador" color="red" label="Atuador"></indicator-tile>
     </dashboard>
 </template>
 
@@ -102,12 +101,29 @@
             swiperSlide
         },
 
+        methods: {
+            setFinalUmidade: function() {
+                console.log("> Temperatura Inicial:"+this.finalUmidade);
+            },
+            setInitialUmidade: function() {
+                console.log("> Temperatura Inicial:"+this.initialUmidade);
+            },
+            setFinalTemp: function() {
+                console.log("> Temperatura Inicial:"+this.finalTemp);
+            },
+            setInitialTemp: function() {
+                console.log("> Temperatura Inicial:"+this.initialTemp);
+            }
+        },
+
         data(){
             return {
                 temperature: 0,
-                battery: 100,
+                umidade: 0,
                 snr: 0,
                 rssi: -100,
+                hora: 0, 
+                labelsList: [],
                 chartData1: {},
                 chartData2: {},
                 chartData3: {},
@@ -117,7 +133,13 @@
                     { label: "Something 3", value: 87 },
                     { label: "Something 4", value: 30 },
                     { label: "Something 5", value: 10 }
-                ]
+                ],
+                initialTemp:0,
+                finalTemp: 0,
+                initialUmidade: 0,
+                finalUmidade:0,
+                tempAtuador: false,
+                umidadeAtuador: false,
             }
         },
 
@@ -126,34 +148,73 @@
             var self = this;
 
             // Temperature
-            setInterval(function(){
-                self.temperature = Math.random() * 30;
-            }, 5000);
+            // setInterval(function(){
+            //     self.temperature = Math.random() * 30;
+            // }, 5000);
 
             // Battery
-            setInterval(function(){
-                self.battery = Math.round(Math.random() * 100);
-            }, 4500);
+            // setInterval(function(){
+            //     self.battery = Math.round(Math.random() * 100);
+            // }, 4500);
 
-            // Snr / Rssi
+            // Temperatura
             setInterval(function(){
-                self.rssi = (Math.round(Math.random() * 20) + 100) * -1;
-                self.snr = Math.round(Math.random() * 20);
-            }, 4000);
+                // self.rssi = (Math.round(Math.random() * 20) + 100) * -1;
+                // self.snr = Math.round(Math.random() * 20);
+                self.hora+=1;
+                if(self.hora == 24)
+                {
+                    self.hora = 0;
+                    // Temperatura
+                    self.chartData1.datasets[0].data = [] ;
+                    self.chartData1.labels = [] ; 
+                    // Umidade
+                    self.chartData2.datasets[0].data = [] ;
+                    self.chartData2.labels = [] ; 
+                }
+                // Temperatura
+                self.temperature = Math.random() * 30;
+                self.umidade = Math.floor(Math.random() * 100)
+                self.chartData1.datasets[0].data.push(self.temperature) ;
+                self.chartData1.labels.push(self.hora); 
+                // Umidade
+                self.chartData2.datasets[0].data.push(self.umidade) ;
+                self.chartData2.labels.push(self.hora); 
+            }, 1000);
 
             self.chartData1 = {
-                labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                labels: [],
+                // labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
                 datasets: [
                     {
-                        label: 'Test',
+                        label: 'Temperatura',
                         color: '#2ecc71',
-                        data: [10,15,20,20,10,15,5,7,30,10,12,15]
+                        // data: [10,15,20,20,10,15,5,7,30,10,12,15]
+                        data: []
                     },
+                    // {
+                    //     label: 'Test2',
+                    //     color: '#3498db',
+                    //     data: [10,15,5,7,30,10,12,15,10,15,20,20]
+                    // }
+                ]
+            }
+
+            self.chartData2 = {
+                labels: [],
+                // labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                datasets: [
                     {
-                        label: 'Test2',
+                        label: 'Umidade',
                         color: '#3498db',
-                        data: [10,15,5,7,30,10,12,15,10,15,20,20]
-                    }
+                        // data: [10,15,20,20,10,15,5,7,30,10,12,15]
+                        data: []
+                    },
+                    // {
+                    //     label: 'Test2',
+                    //     color: '#3498db',
+                    //     data: [10,15,5,7,30,10,12,15,10,15,20,20]
+                    // }
                 ]
             }
 
@@ -167,7 +228,6 @@
                     }
                 ]
             }
-
         },
     };
 

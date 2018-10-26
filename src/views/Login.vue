@@ -1,9 +1,8 @@
 <template>
     <dashboard columns="8" rows="8">
-        <value-tile position="c1:f2" color="yellow">
+        <value-tile position="c2:f2" color="yellow">
             <span slot="value">Dashboard</span>
         </value-tile>
-        
         <value-tile position="c6:d7" color="yellow" heading="Data/Hora Curitiba">
             <date-time slot="before" format="ddd DD/MM" time-zone="America/Sao_Paulo"></date-time>
             <date-time slot="value" format="HH:mm" time-zone="America/Sao_Paulo"></date-time>
@@ -16,13 +15,30 @@
         <value-tile position="c3:f5" color="blue" heading="Login">
             <md-field slot="value">
                 <label>Username</label>
-                <md-input v-model="initial"></md-input>
+                <md-input  v-on:keyup.enter="checkLogin(username.text, password.text)" v-model="username"></md-input>
             </md-field>
             <md-field slot="value">
-                <label>Password toggle</label>
-                <md-input v-model="password" type="password"></md-input>
+                <label>Password</label>
+                <md-input v-on:keyup.enter="checkLogin(username.text, password.text)" v-model="password" type="password"></md-input>
             </md-field>
+            <md-button slot="value" v-on:click="checkLogin(username.text, password.text)" class="md-raised md-primary">Login</md-button>
         </value-tile>
+
+        <!-- <md-dialog-confirm
+            :md-active.sync="active"
+            md-title="Falha na autenticação"
+            md-content="Houve alguma falha ao realizar o login! Tente novamnte !"
+            @md-cancel="onCancel"
+            @md-confirm="onConfirm" 
+            /> -->
+
+        <md-dialog-alert
+            :md-active.sync="active"
+            md-title="Falha na Autenticação"
+            md-content="Houve alguma falha ao realizar o login! Tente novamnte !" 
+            v-on:keyup.enter="onConfirm()"
+            />
+
         <router-view/>
     </dashboard>
 </template>
@@ -32,11 +48,16 @@
     import VueMaterial from 'vue-material'
     import 'vue-material/dist/vue-material.min.css'
 
-    Vue.use(VueMaterial)
     import Dashboard from '../components/Dashboard'
     import ValueTile from '../components/ValueTile'
     import DateTime from '../components/atoms/DateTime';
     import Weather from '../components/atoms/Weather';
+    
+    import axios from 'axios'
+    import VueAxios from 'vue-axios'
+
+    Vue.use(VueAxios, axios, VueMaterial)
+
 
     export default {
         components: {
@@ -44,6 +65,48 @@
             ValueTile,
             DateTime,
             Weather
+        },
+        data() {
+            return {
+                password: "",
+                username: "",
+                active: false
+            }
+        },
+        created(){
+
+        },
+        methods: {
+            onConfirm: function(){
+                this.active = false;
+            },
+            onCancel: function(){
+
+            },
+            checkLogin: function(username, password){
+                console.log("> Post: "+JSON.stringify({ "username": this.username,  "password": this.password }));
+                this.axios.post('/api/auth/', {
+                    username: this.username,  
+                    password: this.password
+                })
+                .then(response => {
+                    if( response.data.auth === true )
+                    {
+                        console.log("> Login realizado com Sucesso! ");
+                        this.$router.push('/home');
+                    }
+                    else
+                    {
+                        // create a popup
+                        // return <md-dialog :md-active.sync="
+                        this.active = true;
+                    }
+
+                })
+                .catch(e => {
+                    this.errors.push(e)
+                })
+            }
         }
     }
 </script>

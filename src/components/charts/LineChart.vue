@@ -1,6 +1,8 @@
 <script>
-    import { Line } from 'vue-chartjs'
+    import { Line, mixins } from 'vue-chartjs'
     import deepAssign from 'deep-assign'
+    
+    const { reactiveProp } = mixins
 
     const chartOptions = {
         responsive: true,
@@ -68,6 +70,8 @@
     export default {
 
         extends: Line,
+        
+        mixins: [reactiveProp],
 
         props: ['data', 'options'],
 
@@ -94,7 +98,8 @@
 
             var self = this;
             var opts = deepAssign({}, chartOptions, this.options || {});
-
+            console.log("> CHART DATA: (CREATED)");
+            console.log(this.data);
             self.drawChart = function(){
                 self.renderChart(self.chartData, opts);
             }
@@ -104,18 +109,31 @@
                     self.drawChart();
                 }, 1);
             }
-
         },
 
         mounted () {
             this.drawChart();
+            console.log("> CHART DATA: (MOUNTED)");
+            console.log(this.data);
             window.addEventListener('resize', this.handleResize);
         },
 
         watch: {
             values(){
+                console.log("> CHART DATA: (VALUES)");
+                console.log(this.data);
                 this.drawChart();
-            }
+            },
+                data: function () {
+                    console.log(this.data);
+                    self.drawChart();
+                    this._chart.destroy()
+                    this.renderChart(this.data, this.options)
+                }
+        },
+        data(){
+            console.log("> CHART DATA: (DATA)");
+            console.log(this.data);
         },
 
         beforeDestroy: function () {

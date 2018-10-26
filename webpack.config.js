@@ -4,6 +4,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
+  // target: 'node',
   entry: './src/app.js',
   output: {
     path: path.resolve(__dirname, 'js'),
@@ -79,9 +80,17 @@ module.exports = {
     extensions: ['*', '.js', '.vue', '.json']
   },
   devServer: {
+    port: 4000,
     historyApiFallback: true,
     noInfo: true,
-    overlay: true
+    overlay: true,
+    proxy: {
+      '/api': 'http://localhost:3000/'
+    },
+    // allowedHosts: [
+    //   'localhost',
+    //   // 'host2.com'
+    // ]
   },
   performance: {
     hints: false
