@@ -24,14 +24,6 @@
             <md-button slot="value" v-on:click="checkLogin(username.text, password.text)" class="md-raised md-primary">Login</md-button>
         </value-tile>
 
-        <!-- <md-dialog-confirm
-            :md-active.sync="active"
-            md-title="Falha na autenticação"
-            md-content="Houve alguma falha ao realizar o login! Tente novamnte !"
-            @md-cancel="onCancel"
-            @md-confirm="onConfirm" 
-            /> -->
-
         <md-dialog-alert
             :md-active.sync="active"
             md-title="Falha na Autenticação"
@@ -58,7 +50,6 @@
 
     Vue.use(VueAxios, axios, VueMaterial)
 
-
     export default {
         components: {
             Dashboard,
@@ -73,18 +64,21 @@
                 active: false
             }
         },
-        created(){
-
+        created()
+        {
+            console.log("> On Create Login!")
+            sessionStorage.setItem('session-token', false);
+            console.log("> Session: token - "+sessionStorage.getItem('session-token'));
         },
         methods: {
             onConfirm: function(){
                 this.active = false;
             },
             onCancel: function(){
-
+                this.active = false;
             },
             checkLogin: function(username, password){
-                console.log("> Post: "+JSON.stringify({ "username": this.username,  "password": this.password }));
+                // console.log("> Post: "+JSON.stringify({ "username": this.username,  "password": this.password }));
                 this.axios.post('/api/auth/', {
                     username: this.username,  
                     password: this.password
@@ -93,12 +87,15 @@
                     if( response.data.auth === true )
                     {
                         console.log("> Login realizado com Sucesso! ");
+                        // var sess = sessionStorage.getItem('session-token');
+                        // if(sess && sess !== 'null') { // Sometimes empty values are a string "null"
+                        sessionStorage.setItem('session-token', true);
+                        console.log("> Session: token - "+sessionStorage.getItem('session-token'));
+                        // }
                         this.$router.push('/home');
                     }
                     else
                     {
-                        // create a popup
-                        // return <md-dialog :md-active.sync="
                         this.active = true;
                     }
 

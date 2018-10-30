@@ -12,11 +12,11 @@
         <value-tile position="b1:g2" color="yellow">
             <span slot="value">Dashboard</span>
         </value-tile>
-        <chart-tile position="b3:g5" heading="Temperatura" color="blue" :data="chartData1" type="line"></chart-tile>
-        <chart-tile position="b6:g8" heading="Umidade" color="red" :data="chartData2" type="line"></chart-tile>
+        <chart-tile position="b3:g5" heading="Temperatura" color="blue" :data="temperatureChart" type="line"></chart-tile>
+        <chart-tile position="b6:g8" heading="Humidity" color="red" :data="humidityChart" type="line"></chart-tile>
 
         <level-tile position="h3:h5" color="blue" label="Temperature" :max="30" :value="temperature" unit="°C"></level-tile>
-        <level-tile position="h6:h8" color="red" label="Umidade" :max="100" :value="umidade" unit="%"></level-tile>
+        <level-tile position="h6:h8" color="red" label="Humidity" :max="100" :value="humidity" unit="%"></level-tile>
 
         <value-tile position="a3:a4" color="blue" heading="SetPoint">
             <md-field slot="value">
@@ -33,14 +33,14 @@
         <value-tile position="a6:a7" color="red" heading="SetPoint">
             <md-field slot="value">
                 <label>Initial Value</label>
-                <md-input v-on:keyup.enter="setInitialUmidade" v-model="initialUmidade"></md-input>
+                <md-input v-on:keyup.enter="setinitialHumidity" v-model="initialHumidity"></md-input>
             </md-field>
             <md-field slot="value">
                 <label>Final Value</label>
-                <md-input v-on:keyup.enter="setFinalUmidade" v-model="finalUmidade"></md-input>
+                <md-input v-on:keyup.enter="setfinalHumidity" v-model="finalHumidity"></md-input>
             </md-field>
         </value-tile>
-        <indicator-tile position="a8:a8" :value="umidadeAtuador" color="red" label="Atuador"></indicator-tile>
+        <indicator-tile position="a8:a8" :value="humidityAtuador" color="red" label="Atuador"></indicator-tile>
     </dashboard>
 </template>
 
@@ -48,8 +48,13 @@
     import Vue from 'vue'
     import VueMaterial from 'vue-material'
     import 'vue-material/dist/vue-material.min.css'
-
+    
     Vue.use(VueMaterial)
+
+    import axios from 'axios'
+    // import VueAxios from 'vue-axios'
+
+    Vue.use(axios);
 
     /* SWIPER */
     import 'swiper/dist/css/swiper.css'
@@ -102,44 +107,82 @@
         },
 
         methods: {
-            setFinalUmidade: function() {
-                console.log("> Temperatura Inicial:"+this.finalUmidade);
+            setfinalHumidity: function() {
+                console.log("> Temperatura Inicial:"+this.finalHumidity);
+                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialHumidity, maximum_value: ""+this.finalHumidity })
+                .then(function(response){
+                    console.log('> saved successfully');
+                });  
             },
-            setInitialUmidade: function() {
-                console.log("> Temperatura Inicial:"+this.initialUmidade);
+            setinitialHumidity: function() {
+                console.log("> Temperatura Inicial:"+this.initialHumidity);
+                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialHumidity, maximum_value: ""+this.finalHumidity })
+                .then(function(response){
+                    console.log('> saved successfully');
+                });  
             },
             setFinalTemp: function() {
                 console.log("> Temperatura Inicial:"+this.finalTemp);
+                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialTemp, maximum_value: ""+this.finalTemp })
+                .then(function(response){
+                    console.log('> saved successfully');
+                });  
             },
             setInitialTemp: function() {
                 console.log("> Temperatura Inicial:"+this.initialTemp);
+                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialTemp, maximum_value: ""+this.finalTemp })
+                .then(function(response){
+                    console.log('> saved successfully');
+                });  
+            },
+            fillTempSetpoints: function(response){
+                this.initialTemp = response.data.minimal_value;
+                this.finalTemp = response.data.maximum_value;
+            },
+            fillHumiditySetpoints: function(response){
+                this.initialHumidity = response.data.minimal_value;
+                this.finalHumidity = response.data.maximum_value;
+            },
+            getSetpoints: function() {
+                this.axios.get("/api/setpoints/get/temperature")
+                .then(this.fillTempSetpoints);
+                this.axios.get("/api/setpoints/get/humidity")
+                .then(this.fillHumiditySetpoints);
+            },
+            verifyActuators: function(){
+                if(parseInt(this.temperature) < parseInt(this.initialTemp) || parseInt(this.temperature) > parseInt(this.finalTemp))
+                {
+                    this.tempAtuador = true;
+                }
+                else
+                {
+                    this.tempAtuador = false;
+                }
+
+                if(parseInt(this.humidity) < parseInt(this.initialHumidity) || parseInt(this.humidity) > parseInt(this.finalHumidity))
+                {
+                    this.humidityAtuador = true;
+                }
+                else
+                {
+                    this.humidityAtuador = false;
+                }
             }
         },
 
         data(){
             return {
                 temperature: 0,
-                umidade: 0,
-                snr: 0,
-                rssi: -100,
-                hora: 0, 
-                labelsList: [],
-                chartData1: {},
-                chartData2: {},
-                chartData3: {},
-                listData: [
-                    { label: "Something 1", value: 123 },
-                    { label: "Something 2", value: 90 },
-                    { label: "Something 3", value: 87 },
-                    { label: "Something 4", value: 30 },
-                    { label: "Something 5", value: 10 }
-                ],
+                humidity: 0,
+                hour: 0, 
+                temperatureChart: {},
+                humidityChart: {},
                 initialTemp:0,
                 finalTemp: 0,
-                initialUmidade: 0,
-                finalUmidade:0,
+                initialHumidity: 0,
+                finalHumidity:0,
                 tempAtuador: false,
-                umidadeAtuador: false,
+                humidityAtuador: false,
             }
         },
 
@@ -147,84 +190,63 @@
 
             var self = this;
 
+            var sess = sessionStorage.getItem('session-token');
+            console.log( "> Session: token "+sess );
+            if( ""+sess === "false" )
+            {
+                console.log("> Session: Login Não realizado!");
+                this.$router.push('/');
+            }
+            this.getSetpoints();
             // Temperature
-            // setInterval(function(){
-            //     self.temperature = Math.random() * 30;
-            // }, 5000);
-
-            // Battery
-            // setInterval(function(){
-            //     self.battery = Math.round(Math.random() * 100);
-            // }, 4500);
-
-            // Temperatura
             setInterval(function(){
-                // self.rssi = (Math.round(Math.random() * 20) + 100) * -1;
-                // self.snr = Math.round(Math.random() * 20);
-                self.hora+=1;
-                if(self.hora == 24)
+                self.hour+=1;
+                if(self.hour == 24)
                 {
-                    self.hora = 0;
+                    self.hour = 0;
                     // Temperatura
-                    self.chartData1.datasets[0].data = [] ;
-                    self.chartData1.labels = [] ; 
-                    // Umidade
-                    self.chartData2.datasets[0].data = [] ;
-                    self.chartData2.labels = [] ; 
+                    self.temperatureChart.datasets[0].data = [] ;
+                    self.temperatureChart.labels = [] ; 
+                    // humidity
+                    self.humidityChart.datasets[0].data = [] ;
+                    self.humidityChart.labels = [] ; 
                 }
                 // Temperatura
                 self.temperature = Math.random() * 30;
-                self.umidade = Math.floor(Math.random() * 100)
-                self.chartData1.datasets[0].data.push(self.temperature) ;
-                self.chartData1.labels.push(self.hora); 
-                // Umidade
-                self.chartData2.datasets[0].data.push(self.umidade) ;
-                self.chartData2.labels.push(self.hora); 
-            }, 1000);
+                self.humidity = Math.floor(Math.random() * 100)
+                self.temperatureChart.datasets[0].data.push(self.temperature) ;
+                // self.temperatureChart.datasets[0].data[self.hour] = self.temperature ;
+                var data = new Date();
+                // self.temperatureChart.labels.push(self.hour); 
 
-            self.chartData1 = {
+                // self.temperatureChart.labels.push(data.toLocaleDateString("en-US")); 
+                self.temperatureChart.labels.push(data.getDate()+"/"+(data.getMonth()+1)+" "+self.hour+":00");
+                // humidity
+                self.humidityChart.datasets[0].data.push(self.humidity) ;
+                self.humidityChart.labels.push(self.hour);
+                
+                self.verifyActuators();
+                
+            }, 1000);
+            
+            self.temperatureChart = {
                 labels: [],
-                // labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
                 datasets: [
                     {
                         label: 'Temperatura',
                         color: '#2ecc71',
-                        // data: [10,15,20,20,10,15,5,7,30,10,12,15]
                         data: []
-                    },
-                    // {
-                    //     label: 'Test2',
-                    //     color: '#3498db',
-                    //     data: [10,15,5,7,30,10,12,15,10,15,20,20]
-                    // }
+                    }
                 ]
             }
 
-            self.chartData2 = {
+            self.humidityChart = {
                 labels: [],
-                // labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
                 datasets: [
                     {
-                        label: 'Umidade',
+                        label: 'Humidity',
                         color: '#3498db',
-                        // data: [10,15,20,20,10,15,5,7,30,10,12,15]
                         data: []
-                    },
-                    // {
-                    //     label: 'Test2',
-                    //     color: '#3498db',
-                    //     data: [10,15,5,7,30,10,12,15,10,15,20,20]
-                    // }
-                ]
-            }
-
-            self.chartData3 = {
-                labels: ['Jan','Feb','Mar'],
-                datasets: [
-                    {
-                        label: 'Test',
-                        color: ['#e74c3c', '#3498db', '#2ecc71'],
-                        data: [10,15,20]
                     }
                 ]
             }

@@ -1,4 +1,4 @@
-# Vuepoint
+# DashboardIDS
 
 A vuejs dashboard, based on [vuepoint](https://github.com/mattbrailsford/vuepoint).
 

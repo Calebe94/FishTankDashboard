@@ -98,8 +98,8 @@
 
             var self = this;
             var opts = deepAssign({}, chartOptions, this.options || {});
-            console.log("> CHART DATA: (CREATED)");
-            console.log(this.data);
+            // console.log("> CHART DATA: (CREATED)");
+            // console.log(this.data);
             self.drawChart = function(){
                 self.renderChart(self.chartData, opts);
             }
@@ -113,15 +113,15 @@
 
         mounted () {
             this.drawChart();
-            console.log("> CHART DATA: (MOUNTED)");
-            console.log(this.data);
+            // console.log("> CHART DATA: (MOUNTED)");
+            // console.log(this.data);
             window.addEventListener('resize', this.handleResize);
         },
 
         watch: {
             values(){
-                console.log("> CHART DATA: (VALUES)");
-                console.log(this.data);
+                // console.log("> CHART DATA: (VALUES)");
+                // console.log(this.data);
                 this.drawChart();
             },
                 data: function () {
@@ -130,10 +130,6 @@
                     this._chart.destroy()
                     this.renderChart(this.data, this.options)
                 }
-        },
-        data(){
-            console.log("> CHART DATA: (DATA)");
-            console.log(this.data);
         },
 
         beforeDestroy: function () {
