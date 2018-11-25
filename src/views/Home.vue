@@ -15,7 +15,7 @@
         <chart-tile position="b3:g5" heading="Temperatura" color="blue" :data="temperatureChart" type="line"></chart-tile>
         <chart-tile position="b6:g8" heading="Humidity" color="red" :data="humidityChart" type="line"></chart-tile>
 
-        <level-tile position="h3:h5" color="blue" label="Temperature" :max="30" :value="temperature" unit="°C"></level-tile>
+        <level-tile position="h3:h5" color="blue" label="Temperature" :max="50" :value="temperature" unit="°C"></level-tile>
         <level-tile position="h6:h8" color="red" label="Humidity" :max="100" :value="humidity" unit="%"></level-tile>
 
         <value-tile position="a3:a4" color="blue" heading="SetPoint">
@@ -143,11 +143,36 @@
                 this.initialHumidity = response.data.minimal_value;
                 this.finalHumidity = response.data.maximum_value;
             },
+            fillTemperature: function(response){
+                var temperature = JSON.stringify(response.data.measure);
+                this.temperature = parseFloat(JSON.parse(temperature).value);
+            },
+            fillHumidity: function(response){
+                // console.log("> Humidity: "+JSON.stringify(response.data));
+                // this.humidity = response.data.value;
+                var humidity = JSON.stringify(response.data.measure);
+                this.humidity = parseFloat(JSON.parse(humidity).value);
+            },
             getSetpoints: function() {
                 this.axios.get("/api/setpoints/get/temperature")
                 .then(this.fillTempSetpoints);
                 this.axios.get("/api/setpoints/get/humidity")
                 .then(this.fillHumiditySetpoints);
+            },
+            getTemperature: function(){
+                this.axios.get('/api/measure/last/temperature')
+                .then(this.fillTemperature);
+            },
+            getHumidity: function(){
+                this.axios.get('/api/measure/last/humidity')
+                .then(this.fillHumidity);
+            },
+            clearCharts: function(){
+                this.temperatureChart.datasets[0].data = [] ;
+                this.temperatureChart.labels = [] ; 
+
+                this.humidityChart.datasets[0].data = [] ; 
+                this.humidityChart.labels = [] ; 
             },
             verifyActuators: function(){
                 if(parseInt(this.temperature) < parseInt(this.initialTemp) || parseInt(this.temperature) > parseInt(this.finalTemp))
@@ -198,33 +223,53 @@
                 this.$router.push('/');
             }
             this.getSetpoints();
-            // Temperature
-            setInterval(function(){
-                self.hour+=1;
-                if(self.hour == 24)
-                {
-                    self.hour = 0;
-                    // Temperatura
-                    self.temperatureChart.datasets[0].data = [] ;
-                    self.temperatureChart.labels = [] ; 
-                    // humidity
-                    self.humidityChart.datasets[0].data = [] ;
-                    self.humidityChart.labels = [] ; 
-                }
-                // Temperatura
-                self.temperature = Math.random() * 30;
-                self.humidity = Math.floor(Math.random() * 100)
-                self.temperatureChart.datasets[0].data.push(self.temperature) ;
-                // self.temperatureChart.datasets[0].data[self.hour] = self.temperature ;
-                var data = new Date();
-                // self.temperatureChart.labels.push(self.hour); 
 
-                // self.temperatureChart.labels.push(data.toLocaleDateString("en-US")); 
-                self.temperatureChart.labels.push(data.getDate()+"/"+(data.getMonth()+1)+" "+self.hour+":00");
-                // humidity
-                self.humidityChart.datasets[0].data.push(self.humidity) ;
-                self.humidityChart.labels.push(self.hour);
-                
+            setInterval(function(){
+
+                self.getTemperature();
+                self.getHumidity();
+
+                if(self.hour == 10)
+                {
+                    var data = new Date();
+
+                    var aux_data_temperature = self.temperatureChart.datasets[0].data;
+                    var aux_labels_temperature = self.temperatureChart.labels;
+
+                    var aux_data_humidity = self.humidityChart.datasets[0].data;
+                    var aux_labels_humidity = self.humidityChart.labels;
+
+                    self.clearCharts();
+
+                    aux_data_temperature.push(aux_data_temperature.shift());
+                    aux_labels_temperature.push(aux_labels_temperature.shift());
+
+                    aux_data_temperature[10] = self.temperature;
+                    aux_labels_temperature[10] = data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes());
+
+                    aux_data_humidity.push(aux_data_humidity.shift());
+                    aux_labels_humidity.push(aux_labels_humidity.shift());
+
+                    aux_data_humidity[10] = self.humidity;
+                    aux_labels_humidity[10] = data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes());
+
+                    self.temperatureChart.datasets[0].data = aux_data_temperature;
+                    self.temperatureChart.labels = aux_labels_temperature;
+
+                    self.humidityChart.datasets[0].data = aux_data_humidity;
+                    self.humidityChart.labels = aux_labels_humidity;
+                }
+                else
+                {
+                    self.hour+=1;
+                    var data = new Date();
+
+                    self.temperatureChart.datasets[0].data.push(self.temperature) ;
+                    self.temperatureChart.labels.push(data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes()));
+
+                    self.humidityChart.datasets[0].data.push(self.humidity) ;
+                    self.humidityChart.labels.push(data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes()));
+                }
                 self.verifyActuators();
                 
             }, 1000);
