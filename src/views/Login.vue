@@ -102,7 +102,8 @@
                     }
                 })
                 .catch(e => {
-                    this.errors.push(e)
+                    console.log(e);
+                    // this.errors.push(e)
                 })
             }
         }
