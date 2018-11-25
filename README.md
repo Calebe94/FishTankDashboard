@@ -9,11 +9,24 @@ A vuejs dashboard, based on [vuepoint](https://github.com/mattbrailsford/vuepoin
 
 ``` bash
 # Install submodules
-git submodule init
+git submodule update --init .
 
+# Go to Submodule folder
+cd DashboadService
+
+# Install dependencies
+npm install
+
+# Go back to root project
+cd ..
 
 # install dependencies
 npm install
+
+# serve at localhost:1337
+npm run server
+
+# or
 
 # serve with hot reload at localhost:8080
 npm run dev
