@@ -4,9 +4,14 @@ A vuejs dashboard, based on [vuepoint](https://github.com/mattbrailsford/vuepoin
 
 ![Screenshot](img/screenshot.png)
 
+
 ## Build Setup
 
 ``` bash
+# Install submodules
+git submodule init
+
+
 # install dependencies
 npm install
 

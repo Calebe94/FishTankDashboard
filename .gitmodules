@@ -1,0 +1,3 @@
+[submodule "DashboardService"]
+	path = DashboardService
+	url = https://github.com/Calebe94/DashboardService
