@@ -48,6 +48,8 @@
     import axios from 'axios'
     import VueAxios from 'vue-axios'
 
+    const crypto_extra = require('crypto-extra');
+
     Vue.use(VueAxios, axios, VueMaterial)
 
     export default {
@@ -81,7 +83,7 @@
                 // console.log("> Post: "+JSON.stringify({ "username": this.username,  "password": this.password }));
                 this.axios.post('/api/auth/', {
                     username: this.username,  
-                    password: this.password
+                    password: crypto_extra.createHash('sha256').update(this.password).digest("hex")
                 })
                 .then(response => {
                     if( response.data.auth === true )
@@ -98,7 +100,6 @@
                     {
                         this.active = true;
                     }
-
                 })
                 .catch(e => {
                     this.errors.push(e)
