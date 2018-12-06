@@ -1,6 +1,6 @@
 <template>
     <dashboard columns="8" rows="8">
-        <value-tile position="a1:a2" color="yellow">
+        <value-tile position="a1:a2" heading="Data/Hora" color="yellow">
             <date-time slot="before" format="ddd DD/MM" time-zone="America/Sao_Paulo"></date-time>
             <date-time slot="value" format="HH:mm" time-zone="America/Sao_Paulo"></date-time>
         </value-tile>
@@ -10,55 +10,56 @@
         </value-tile>
         
         <value-tile position="b1:g2" color="yellow">
-            <span slot="value">Dashboard</span>
+            <span slot="value">Controlador do Aquário</span>
         </value-tile>
-        <chart-tile position="b3:g5" heading="Temperatura" color="blue" :data="temperatureChart" type="line"></chart-tile>
-        <chart-tile position="b6:g8" heading="Humidity" color="red" :data="humidityChart" type="line"></chart-tile>
 
-        <level-tile position="h3:h5" color="blue" label="Temperature" :max="50" :value="temperature" unit="°C"></level-tile>
-        <level-tile position="h6:h8" color="red" label="Humidity" :max="100" :value="humidity" unit="%"></level-tile>
+        <load-tile-dialog position="a3:b4" color="green" heading="Relê 1 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="1"></load-tile-dialog>
+        <indicator-tile position="a5:b5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
 
-        <value-tile position="a3:a4" color="blue" heading="SetPoint">
-            <md-field slot="value">
-                <label>Initial Value</label>
-                <md-input v-on:keyup.enter="setInitialTemp" v-model="initialTemp"></md-input>
-            </md-field>
-            <md-field slot="value">
-                <label>Final Value</label>
-                <md-input v-on:keyup.enter="setFinalTemp" v-model="finalTemp"></md-input>
-            </md-field>
-        </value-tile>
-        <indicator-tile position="a5:a5" :value="tempAtuador" color="blue" label="Atuador"></indicator-tile>
+        <load-tile-dialog position="c3:d4" color="green" heading="Relê 2 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="2"></load-tile-dialog>
+        <indicator-tile position="c5:d5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
 
-        <value-tile position="a6:a7" color="red" heading="SetPoint">
-            <md-field slot="value">
-                <label>Initial Value</label>
-                <md-input v-on:keyup.enter="setinitialHumidity" v-model="initialHumidity"></md-input>
-            </md-field>
-            <md-field slot="value">
-                <label>Final Value</label>
-                <md-input v-on:keyup.enter="setfinalHumidity" v-model="finalHumidity"></md-input>
-            </md-field>
-        </value-tile>
-        <indicator-tile position="a8:a8" :value="humidityAtuador" color="red" label="Atuador"></indicator-tile>
+        <load-tile-dialog position="e3:f4" color="green" heading="Relê 3 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="3"></load-tile-dialog>
+        <indicator-tile position="e5:f5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
+
+        <load-tile-dialog position="g3:h4" color="green" heading="Relê 4 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="4"></load-tile-dialog>
+        <indicator-tile position="g5:h5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
+
+        <load-tile-dialog position="b6:c7" color="green" heading="Relê 1 - (DC)" type="Horario" value="10:00 - 20:00" typeLoad="DC" whichLoad="1"></load-tile-dialog>
+        <indicator-tile position="b8:c8" :value="humidityAtuador" color="green" label="Status"></indicator-tile> 
+                
+        <load-tile-dialog position="d6:e7" color="green" heading="Relê 2 - (DC)" type="Horario" value="10:00 - 20:00" typeLoad="DC" whichLoad="2"></load-tile-dialog>
+        <indicator-tile position="d8:e8" :value="humidityAtuador" color="green" label="Status"></indicator-tile>
+                
+        <load-tile-dialog position="f6:g7" color="green" heading="Relê 3 - (DC)" type="Horario" value="10:00 - 20:00" typeLoad="DC" whichLoad="3"></load-tile-dialog>
+        <indicator-tile position="f8:g8" :value="true" color="green" label="Status"></indicator-tile>
+    
+        <level-tile position="a6:a8" color="blue" label="Sensor 1" :max="50" :value="temperature" unit="°C"></level-tile>
+        <level-tile position="h6:h8" color="blue" label="Sensor 2" :max="50" :value="temperature" unit="°C"></level-tile> 
     </dashboard>
 </template>
-
+<style lang="scss" scoped>
+    .md-accent {
+        // margin: 40px;
+        background: #21243f;
+        // background: rgba(0, 0, 0, 0.9);
+        color: #fff;
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+    }
+</style>
 <script>
     import Vue from 'vue'
     import VueMaterial from 'vue-material'
     import 'vue-material/dist/vue-material.min.css'
+
+    import 'swiper/dist/css/swiper.css'
+    import { swiper, swiperSlide } from 'vue-awesome-swiper'
     
     Vue.use(VueMaterial)
 
     import axios from 'axios'
-    // import VueAxios from 'vue-axios'
 
     Vue.use(axios);
-
-    /* SWIPER */
-    import 'swiper/dist/css/swiper.css'
-    import { swiper, swiperSlide } from 'vue-awesome-swiper'
 
     import Dashboard from '../components/Dashboard';
 
@@ -80,6 +81,13 @@
     import BatteryTile from '../components/BatteryTile';
     import LevelTile from '../components/LevelTile';
     import TextTile from '../components/TextTile';
+
+    import LoadTile from '../components/LoadTile';
+    import LoadTileDialog from '../components/LoadTileDialog';
+
+    import TimePicker from '../components/atoms/TimePicker'
+    import PickHour from '../components/atoms/PickHour'
+    import PickMinute from '../components/atoms/PickMinute'
 
     export default {
 
@@ -103,10 +111,18 @@
             TextTile,
             Tile,
             swiper,
-            swiperSlide
+            swiperSlide,
+            TimePicker,
+            LoadTile,
+            PickHour,
+            PickMinute,
+            LoadTileDialog
         },
 
         methods: {
+            showSelectedHour: function(data){
+                console.log("Hora Selecionada: "+data);
+            },
             setfinalHumidity: function() {
                 console.log("> Temperatura Inicial:"+this.finalHumidity);
                 this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialHumidity, maximum_value: ""+this.finalHumidity })
@@ -148,8 +164,6 @@
                 this.temperature = parseFloat(JSON.parse(temperature).value);
             },
             fillHumidity: function(response){
-                // console.log("> Humidity: "+JSON.stringify(response.data));
-                // this.humidity = response.data.value;
                 var humidity = JSON.stringify(response.data.measure);
                 this.humidity = parseFloat(JSON.parse(humidity).value);
             },
@@ -202,13 +216,17 @@
                 hour: 0, 
                 temperatureChart: {},
                 humidityChart: {},
-                initialTemp:0,
-                finalTemp: 0,
+                initialTemp: null,
+                finalTemp: null,
                 initialHumidity: 0,
                 finalHumidity:0,
                 tempAtuador: false,
                 humidityAtuador: false,
+                showDialog: false
             }
+        },
+        mounted(){
+            console.log("MOUNTED!");
         },
 
         created() {
@@ -222,57 +240,6 @@
                 console.log("> Session: Login Não realizado!");
                 this.$router.push('/');
             }
-            this.getSetpoints();
-
-            setInterval(function(){
-
-                self.getTemperature();
-                self.getHumidity();
-
-                if(self.hour == 10)
-                {
-                    var data = new Date();
-
-                    var aux_data_temperature = self.temperatureChart.datasets[0].data;
-                    var aux_labels_temperature = self.temperatureChart.labels;
-
-                    var aux_data_humidity = self.humidityChart.datasets[0].data;
-                    var aux_labels_humidity = self.humidityChart.labels;
-
-                    self.clearCharts();
-
-                    aux_data_temperature.push(aux_data_temperature.shift());
-                    aux_labels_temperature.push(aux_labels_temperature.shift());
-
-                    aux_data_temperature[10] = self.temperature;
-                    aux_labels_temperature[10] = data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes());
-
-                    aux_data_humidity.push(aux_data_humidity.shift());
-                    aux_labels_humidity.push(aux_labels_humidity.shift());
-
-                    aux_data_humidity[10] = self.humidity;
-                    aux_labels_humidity[10] = data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes());
-
-                    self.temperatureChart.datasets[0].data = aux_data_temperature;
-                    self.temperatureChart.labels = aux_labels_temperature;
-
-                    self.humidityChart.datasets[0].data = aux_data_humidity;
-                    self.humidityChart.labels = aux_labels_humidity;
-                }
-                else
-                {
-                    self.hour+=1;
-                    var data = new Date();
-
-                    self.temperatureChart.datasets[0].data.push(self.temperature) ;
-                    self.temperatureChart.labels.push(data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes()));
-
-                    self.humidityChart.datasets[0].data.push(self.humidity) ;
-                    self.humidityChart.labels.push(data.getDate()+"/"+(data.getMonth()+1)+" "+(data.getHours())+":"+(data.getMinutes()));
-                }
-                self.verifyActuators();
-                
-            }, 1000);
             
             self.temperatureChart = {
                 labels: [],

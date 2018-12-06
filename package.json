@@ -31,6 +31,7 @@
     "vue-chartjs": "^3.0.2",
     "vue-cli": "^2.9.6",
     "vue-material": "^1.0.0-beta-10.2",
+    "vue-overdrive": "0.0.12",
     "vue-router": "^3.0.1",
     "winston": "^3.1.0"
   },
