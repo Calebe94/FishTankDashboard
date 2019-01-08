@@ -85,7 +85,7 @@ module.exports = {
     noInfo: true,
     overlay: true,
     proxy: {
-      '/api': 'http://localhost:1337/'
+      '/api': 'http://localhost:3000/'
     },
     // allowedHosts: [
     //   'localhost',

@@ -1,41 +1,41 @@
 <template>
     <dashboard columns="8" rows="8">
-        <value-tile position="a1:a2" heading="Data/Hora" color="yellow">
+        <!-- <value-tile position="a1:a2" heading="Data/Hora" color="yellow">
             <date-time slot="before" format="ddd DD/MM" time-zone="America/Sao_Paulo"></date-time>
             <date-time slot="value" format="HH:mm" time-zone="America/Sao_Paulo"></date-time>
-        </value-tile>
+        </value-tile> -->
         
-        <value-tile position="h1:h2" heading="Curitiba" color="yellow">
+        <!-- <value-tile position="h1:h2" heading="Curitiba" color="yellow">
             <weather slot="value" city="Curitiba"></weather>
-        </value-tile>
+        </value-tile> -->
         
-        <value-tile position="b1:g2" color="yellow">
+        <value-tile position="a1:h2" color="yellow">
             <span slot="value">Controlador do Aquário</span>
         </value-tile>
 
-        <load-tile-dialog position="a3:b4" color="green" heading="Relê 1 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="1"></load-tile-dialog>
-        <indicator-tile position="a5:b5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
+        <load-tile-dialog position="a3:b4" color="green" heading="Relê 1 - (AC)" :type="type_load_ac_1" :value="setpoints_load_ac_1" typeLoad="AC" whichLoad="1"></load-tile-dialog>
+        <indicator-tile position="a5:b5" :value="status_load_ac_1" color="green" label="Status"></indicator-tile> 
 
-        <load-tile-dialog position="c3:d4" color="green" heading="Relê 2 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="2"></load-tile-dialog>
-        <indicator-tile position="c5:d5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
+        <load-tile-dialog position="c3:d4" color="green" heading="Relê 2 - (AC)" :type="type_load_ac_2" :value="setpoints_load_ac_2" typeLoad="AC" whichLoad="2"></load-tile-dialog>
+        <indicator-tile position="c5:d5" :value="status_load_ac_2" color="green" label="Status"></indicator-tile> 
 
-        <load-tile-dialog position="e3:f4" color="green" heading="Relê 3 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="3"></load-tile-dialog>
-        <indicator-tile position="e5:f5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
+        <load-tile-dialog position="e3:f4" color="green" heading="Relê 3 - (AC)" :type="type_load_ac_3" :value="setpoints_load_ac_3" typeLoad="AC" whichLoad="3"></load-tile-dialog>
+        <indicator-tile position="e5:f5" :value="status_load_ac_3" color="green" label="Status"></indicator-tile> 
 
-        <load-tile-dialog position="g3:h4" color="green" heading="Relê 4 - (AC)" type="Horario" value="10:00 - 20:00" typeLoad="AC" whichLoad="4"></load-tile-dialog>
-        <indicator-tile position="g5:h5" :value="humidityAtuador" color="red" label="Status"></indicator-tile> 
+        <load-tile-dialog position="g3:h4" color="green" heading="Relê 4 - (AC)" :type="type_load_ac_4" :value="setpoints_load_ac_4" typeLoad="AC" whichLoad="4"></load-tile-dialog>
+        <indicator-tile position="g5:h5" :value="status_load_ac_4" color="green" label="Status"></indicator-tile> 
 
-        <load-tile-dialog position="b6:c7" color="green" heading="Relê 1 - (DC)" type="Horario" value="10:00 - 20:00" typeLoad="DC" whichLoad="1"></load-tile-dialog>
-        <indicator-tile position="b8:c8" :value="humidityAtuador" color="green" label="Status"></indicator-tile> 
+        <load-tile-dialog position="b6:c7" color="blue" heading="Relê 1 - (DC)" :type="type_load_dc_1" :value="setpoints_load_dc_1" typeLoad="DC" whichLoad="1"></load-tile-dialog>
+        <indicator-tile position="b8:c8" :value="status_load_dc_1" color="blue" label="Status"></indicator-tile> 
                 
-        <load-tile-dialog position="d6:e7" color="green" heading="Relê 2 - (DC)" type="Horario" value="10:00 - 20:00" typeLoad="DC" whichLoad="2"></load-tile-dialog>
-        <indicator-tile position="d8:e8" :value="humidityAtuador" color="green" label="Status"></indicator-tile>
+        <load-tile-dialog position="d6:e7" color="blue" heading="Relê 2 - (DC)" :type="type_load_dc_2" :value="setpoints_load_dc_2" typeLoad="DC" whichLoad="2"></load-tile-dialog>
+        <indicator-tile position="d8:e8" :value="status_load_dc_2" color="blue" label="Status"></indicator-tile>
                 
-        <load-tile-dialog position="f6:g7" color="green" heading="Relê 3 - (DC)" type="Horario" value="10:00 - 20:00" typeLoad="DC" whichLoad="3"></load-tile-dialog>
-        <indicator-tile position="f8:g8" :value="true" color="green" label="Status"></indicator-tile>
+        <load-tile-dialog position="f6:g7" color="blue" heading="Relê 3 - (DC)" :type="type_load_dc_3" :value="setpoints_load_dc_3" typeLoad="DC" whichLoad="3"></load-tile-dialog>
+        <indicator-tile position="f8:g8" :value="status_load_dc_3" color="blue" label="Status"></indicator-tile>
     
-        <level-tile position="a6:a8" color="blue" label="Sensor 1" :max="50" :value="temperature" unit="°C"></level-tile>
-        <level-tile position="h6:h8" color="blue" label="Sensor 2" :max="50" :value="temperature" unit="°C"></level-tile> 
+        <level-tile position="a6:a8" color="red" label="Sensor 1" :max="50" :value="10" unit="°C"></level-tile>
+        <level-tile position="h6:h8" color="red" label="Sensor 2" :max="50" :value="30" unit="°C"></level-tile> 
     </dashboard>
 </template>
 <style lang="scss" scoped>
@@ -88,6 +88,7 @@
     import TimePicker from '../components/atoms/TimePicker'
     import PickHour from '../components/atoms/PickHour'
     import PickMinute from '../components/atoms/PickMinute'
+import { setInterval } from 'timers';
 
     export default {
 
@@ -120,92 +121,184 @@
         },
 
         methods: {
-            showSelectedHour: function(data){
-                console.log("Hora Selecionada: "+data);
+            splitLoadsData: function(arrayData){
+                try 
+                {
+                    arrayData.forEach(element => {
+                        if(element.type === 'DC')
+                        {
+                            this.DCLoadsArray.push(JSON.stringify(element));
+                        }
+                        else
+                        {
+                            this.ACLoadsArray.push(JSON.stringify(element));
+                        }
+                    });
+                }
+                catch (error)
+                {
+                    console.log(error);
+                }
             },
-            setfinalHumidity: function() {
-                console.log("> Temperatura Inicial:"+this.finalHumidity);
-                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialHumidity, maximum_value: ""+this.finalHumidity })
-                .then(function(response){
-                    console.log('> saved successfully');
-                });  
-            },
-            setinitialHumidity: function() {
-                console.log("> Temperatura Inicial:"+this.initialHumidity);
-                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialHumidity, maximum_value: ""+this.finalHumidity })
-                .then(function(response){
-                    console.log('> saved successfully');
-                });  
-            },
-            setFinalTemp: function() {
-                console.log("> Temperatura Inicial:"+this.finalTemp);
-                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialTemp, maximum_value: ""+this.finalTemp })
-                .then(function(response){
-                    console.log('> saved successfully');
-                });  
-            },
-            setInitialTemp: function() {
-                console.log("> Temperatura Inicial:"+this.initialTemp);
-                this.axios.post('/api/setpoints/set/temperature', { minimal_value: ""+this.initialTemp, maximum_value: ""+this.finalTemp })
-                .then(function(response){
-                    console.log('> saved successfully');
-                });  
-            },
-            fillTempSetpoints: function(response){
-                this.initialTemp = response.data.minimal_value;
-                this.finalTemp = response.data.maximum_value;
-            },
-            fillHumiditySetpoints: function(response){
-                this.initialHumidity = response.data.minimal_value;
-                this.finalHumidity = response.data.maximum_value;
-            },
-            fillTemperature: function(response){
-                var temperature = JSON.stringify(response.data.measure);
-                this.temperature = parseFloat(JSON.parse(temperature).value);
-            },
-            fillHumidity: function(response){
-                var humidity = JSON.stringify(response.data.measure);
-                this.humidity = parseFloat(JSON.parse(humidity).value);
-            },
-            getSetpoints: function() {
-                this.axios.get("/api/setpoints/get/temperature")
-                .then(this.fillTempSetpoints);
-                this.axios.get("/api/setpoints/get/humidity")
-                .then(this.fillHumiditySetpoints);
-            },
-            getTemperature: function(){
-                this.axios.get('/api/measure/last/temperature')
-                .then(this.fillTemperature);
-            },
-            getHumidity: function(){
-                this.axios.get('/api/measure/last/humidity')
-                .then(this.fillHumidity);
-            },
-            clearCharts: function(){
-                this.temperatureChart.datasets[0].data = [] ;
-                this.temperatureChart.labels = [] ; 
+            fillLoadTiles: function(){
+                // console.log("FillLoadTiles!");
+                this.ACLoadsArray.forEach(element => {
+                    var aux_element = JSON.parse(element);
+                    if ( aux_element.number === '1' ) 
+                    {
+                        if(aux_element.initial !== "" && aux_element.end !== "")
+                        {
+                            this.setpoints_load_ac_1 = aux_element.initial+" - "+aux_element.end;
+                            if(aux_element.parameter === 'time')
+                            {
+                                this.type_load_ac_1 = "Tempo";
+                            }
+                            else if(aux_element.parameter === 'value')
+                            {
+                                this.type_load_ac_1 = "Sensor";
+                            }
+                        }
+                        else
+                        {
+                            this.setpoints_load_ac_1 = "";
+                            this.type_load_ac_1 = "Desativado"; 
+                        }
+                    }
+                    else if( aux_element.number === '2' )
+                    {
+                        if(aux_element.initial !== "" && aux_element.end !== "")
+                        {
+                            this.setpoints_load_ac_2 = aux_element.initial+" - "+aux_element.end;
+                            if(aux_element.parameter === 'time')
+                            {
+                                this.type_load_ac_2 = "Tempo";
+                            }
+                            else if(aux_element.parameter === 'value')
+                            {
+                                this.type_load_ac_2 = "Sensor";
+                            }
+                        }
+                        else
+                        {
+                            this.setpoints_load_ac_2 = "";
+                            this.type_load_ac_2 = "Desativado"; 
+                        }
+                    }
+                    else if( aux_element.number === '3' )
+                    {
+                        if(aux_element.initial !== "" && aux_element.end !== "")
+                        {
+                            this.setpoints_load_ac_3 = aux_element.initial+" - "+aux_element.end;
+                            if(aux_element.parameter === 'time')
+                            {
+                                this.type_load_ac_3 = "Tempo";
+                            }
+                            else if(aux_element.parameter === 'value')
+                            {
+                                this.type_load_ac_3 = "Sensor";
+                            }
+                        }
+                        else
+                        {
+                            this.setpoints_load_ac_3 = ""
+                            this.type_load_ac_3 = "Desativado"; 
+                        }
+                    }
+                    else if( aux_element.number === '4' )
+                    {
+                        if(aux_element.initial !== "" && aux_element.end !== "")
+                        {
+                            this.setpoints_load_ac_4 = aux_element.initial+" - "+aux_element.end;
+                            if(aux_element.parameter === 'time')
+                            {
+                                this.type_load_ac_4 = "Tempo";
+                            }
+                            else if(aux_element.parameter === 'value')
+                            {
+                                this.type_load_ac_4 = "Sensor";
+                            }
+                        }
+                        else
+                        {
+                            this.setpoints_load_ac_4 = "";
+                            this.type_load_ac_4 = "Desativado"; 
+                        }
+                    }
+                });
 
-                this.humidityChart.datasets[0].data = [] ; 
-                this.humidityChart.labels = [] ; 
+                this.DCLoadsArray.forEach(element => {
+                    var aux_element = JSON.parse(element);
+                    if ( aux_element.number === '1' ) 
+                    {
+                        if(aux_element.initial !== "" && aux_element.end !== "")
+                        {
+                            this.setpoints_load_dc_1 = aux_element.initial+" - "+aux_element.end;
+                            if(aux_element.parameter === 'time')
+                            {
+                                this.type_load_dc_1 = "Tempo";
+                            }
+                            else if(aux_element.parameter === 'value')
+                            {
+                                this.type_load_dc_1 = "Sensor";
+                            }
+                        }
+                        else
+                        {
+                            this.setpoints_load_dc_1 = "";
+                            this.type_load_dc_1 = "Desativado"; 
+                        }
+                    }
+                    else if( aux_element.number === '2' )
+                    {
+                        if(aux_element.initial !== "" && aux_element.end !== "")
+                        {
+                            this.setpoints_load_dc_2 = aux_element.initial+" - "+aux_element.end;
+                            if(aux_element.parameter === 'time')
+                            {
+                                this.type_load_dc_2 = "Tempo";
+                            }
+                            else if(aux_element.parameter === 'value')
+                            {
+                                this.type_load_dc_2 = "Sensor";
+                            }
+                        }
+                        else
+                        {
+                            this.setpoints_load_dc_1 = "";
+                            this.type_load_dc_2 = "Desativado"; 
+                        }
+                    }
+                    else if( aux_element.number === '3' )
+                    {
+                        if(aux_element.initial !== "" && aux_element.end !== "")
+                        {
+                            this.setpoints_load_dc_3 = aux_element.initial+" - "+aux_element.end;
+                            if(aux_element.parameter === 'time')
+                            {
+                                this.type_load_dc_3 = "Tempo";
+                            }
+                            else if(aux_element.parameter === 'value')
+                            {
+                                this.type_load_dc_3 = "Sensor";
+                            }
+                        }
+                        else
+                        {
+                            this.setpoints_load_dc_3 = "";
+                            this.type_load_dc_3 = "Desativado"; 
+                        }
+                    }
+                });
             },
-            verifyActuators: function(){
-                if(parseInt(this.temperature) < parseInt(this.initialTemp) || parseInt(this.temperature) > parseInt(this.finalTemp))
-                {
-                    this.tempAtuador = true;
-                }
-                else
-                {
-                    this.tempAtuador = false;
-                }
+            sortData: function(){
+                this.ACLoadsArray.sort(function(a, b) {
+                    // console.log("Numero: "+JSON.parse(a));
+                    return parseInt(a.number) - parseInt(b.number);
+                });
 
-                if(parseInt(this.humidity) < parseInt(this.initialHumidity) || parseInt(this.humidity) > parseInt(this.finalHumidity))
-                {
-                    this.humidityAtuador = true;
-                }
-                else
-                {
-                    this.humidityAtuador = false;
-                }
+                this.DCLoadsArray.sort(function(a, b) {
+                    return parseInt(a.number) - parseInt(b.number);
+                });
             }
         },
 
@@ -213,55 +306,56 @@
             return {
                 temperature: 0,
                 humidity: 0,
-                hour: 0, 
-                temperatureChart: {},
-                humidityChart: {},
-                initialTemp: null,
-                finalTemp: null,
-                initialHumidity: 0,
-                finalHumidity:0,
-                tempAtuador: false,
-                humidityAtuador: false,
-                showDialog: false
+                type_load_dc_1: "",
+                setpoints_load_dc_1: "",
+                status_load_dc_1: false,
+                type_load_dc_2: "",
+                setpoints_load_dc_2: "",
+                status_load_dc_2: false,
+                type_load_dc_3: "",
+                setpoints_load_dc_3: "",
+                status_load_dc_3: false,
+                type_load_ac_1: "",
+                setpoints_load_ac_1: "",
+                status_load_ac_1: false,
+                type_load_ac_2: "",
+                setpoints_load_ac_2: "",
+                status_load_ac_2: false,
+                type_load_ac_3: "",
+                setpoints_load_ac_3: "",
+                status_load_ac_3: false,
+                type_load_ac_4: "",
+                setpoints_load_ac_4: "",
+                status_load_ac_4: false,
+                sensor1: 0,
+                sensor2: 0,
+                ACLoadsArray: [],
+                DCLoadsArray: [],
             }
         },
-        mounted(){
-            console.log("MOUNTED!");
+        mounted()
+        {
+
         },
 
         created() {
-
             var self = this;
-
-            var sess = sessionStorage.getItem('session-token');
-            console.log( "> Session: token "+sess );
-            if( ""+sess === "false" )
+            this.axios.get("/api/master/get/loads").then(function(response)
             {
-                console.log("> Session: Login Não realizado!");
-                this.$router.push('/');
-            }
-            
-            self.temperatureChart = {
-                labels: [],
-                datasets: [
-                    {
-                        label: 'Temperatura',
-                        color: '#2ecc71',
-                        data: []
-                    }
-                ]
-            }
-
-            self.humidityChart = {
-                labels: [],
-                datasets: [
-                    {
-                        label: 'Humidity',
-                        color: '#3498db',
-                        data: []
-                    }
-                ]
-            }
+                self.splitLoadsData(response.data);
+                // self.sortData();
+                self.fillLoadTiles();
+            });
+            setInterval(function()
+            { 
+                self.axios.get("/api/master/get/loads").then(function(response)
+                {
+                    self.splitLoadsData(response.data);
+                    self.fillLoadTiles();
+                });
+                // console.log("TESTE DE INTERVALO!");
+                // alert("Hello"); 
+            }, 1000/2);
         },
     };
 

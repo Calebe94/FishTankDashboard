@@ -11,7 +11,8 @@ export default class WeatherService {
     async performQuery(query) {
         return await axios({
             method: 'get',
-            url: `https://query.yahooapis.com/v1/public/yql?q=${query}&format=json`
+            
+            url: `https://weather-ydn-yql.media.yahoo.com/forecastrss/yql?q=${query}&format=json`
         });
     }
      

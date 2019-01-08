@@ -29,7 +29,7 @@
 
                             <md-dialog-actions>
                                 <md-button class="md-primary" @click="showDialog = false">Fechar</md-button>
-                                <md-button class="md-primary" @click="showDialog = false">Salvar</md-button>
+                                <md-button class="md-primary" @click="setHour();showDialog = false">Salvar</md-button>
                             </md-dialog-actions>
                         </md-tab>
 
@@ -46,7 +46,7 @@
 
                             <md-dialog-actions>
                                 <md-button class="md-primary" @click="showDialog = false">Fechar</md-button>
-                                <md-button class="md-primary" @click="showDialog = false">Salvar</md-button>
+                                <md-button class="md-primary" @click="setValue(); showDialog = false">Salvar</md-button>
                             </md-dialog-actions>
                         </md-tab>
 
@@ -55,7 +55,7 @@
 
                             <md-dialog-actions>
                                 <md-button class="md-primary" @click="showDialog = false">Não</md-button>
-                                <md-button class="md-primary" @click="showDialog = false">Sim</md-button>
+                                <md-button class="md-primary" @click="loadDeactivate(); showDialog = false">Sim</md-button>
                             </md-dialog-actions>
 
                         </md-tab>
@@ -155,24 +155,28 @@
                 if(hour != "function String() { [native code] }")
                 {
                     console.log("Carga: "+this.whichLoad+" - Tipo: "+this.typeLoad+" - "+"Hora Inicial: "+hour);
+                    this.initialHour = hour;
                 }
             },
             selectInitialMinute: function(minute){
                 if(minute != "function String() { [native code] }")
                 {
                     console.log("Carga: "+this.whichLoad+" - Tipo: "+this.typeLoad+" - "+"Minuto Inicial: "+minute);
+                    this.initalMinute = minute;
                 }
             },
             selectEndHour: function(hour){
                 if(hour != "function String() { [native code] }")
                 {
                     console.log("Carga: "+this.whichLoad+" - Tipo: "+this.typeLoad+" - "+"Hora Final: "+hour);
+                    this.endHour = hour;
                 }
             },
             selectEndMinute: function(minute){
                 if(minute != "function String() { [native code] }")
                 {
                     console.log("Carga: "+this.whichLoad+" - Tipo: "+this.typeLoad+" - "+"Minute Final: "+minute);
+                    this.endMinute = minute;
                 }
             },
             setInitialValue: function(){
@@ -180,13 +184,47 @@
             },
             setEndValue: function(){
                 console.log("End Value: "+endValue);
+            },
+            setHour: function(){
+                // Desativa o tipo sensor do banco
+                // Ativa o tipo hora do banco
+                // Seta Hora
+                var initialTime = this.initialHour+":"+this.initalMinute;
+                var endTime = this.endHour+":"+this.endMinute;
+                this.axios.post('/api/master/set/'+this.typeLoad+"/"+this.whichLoad+"/time", { initial: initialTime, end: endTime})
+                .then(function(response){
+
+                });
+                console.log("Carga: "+this.whichLoad+" - Tipo: "+this.typeLoad+" - "+"Hora Inicial: "+this.initialHour+":"+this.initalMinute+" - Hora Final: "+this.endHour+":"+this.endMinute);
+            },
+            setValue: function(){
+                // Desativa o tipo hora do banco
+                // Ativa o tipo sensor do banco
+                // Seta valor
+                this.axios.post('/api/master/set/'+this.typeLoad+"/"+this.whichLoad+"/value", { initial: this.initialValue, end: this.endValue})
+                .then(function(response){
+
+                });
+                console.log("Carga: "+this.whichLoad+" - Tipo: "+this.typeLoad+" - "+"Valor Inicial: "+this.initialValue+" - Valor Final: "+this.endValue);
+            },
+            loadDeactivate: function(){
+                // Desativa a carga
+                this.axios.post('/api/master/set/'+this.typeLoad+"/"+this.whichLoad+"/disable", {})
+                .then(function(response){
+
+                });
+                console.log(this.whichLoad+"-"+this.typeLoad+" Deactivated!");
             }
         },
         data(){
             return{
                 showDialog: false,
                 initialValue: null,
-                endValue: null
+                endValue: null,
+                initialHour: null,
+                endHour: null,
+                initalMinute: null,
+                endMinute: null
             }
         }
     }
