@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update and improvement home interface 
+- Changed repository name from IDS_Dashboard to FishTankDashboard
+- Merged *aquario* branch to master
 
 ### Added
 - This CHANGELOG file to hopefully serve as an evolving example of a

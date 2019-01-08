@@ -8,7 +8,8 @@
 
 ## Change
 
-- [] Merge to Master
+- [x] Merge to Master
+- [x] Change repository name
 
 ---
 
