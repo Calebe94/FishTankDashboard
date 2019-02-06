@@ -1,7 +1,7 @@
 var path = require("path");
 var express = require("express");
 
-var backend = require("./DashboardService/index");
+var backend = require("./FishTankService/index");
 
 var DIST_DIR = path.join(__dirname, "./");
 
